@@ -1,0 +1,31 @@
+/// <reference types="react" />
+export interface ShapeProps {
+    size?: number;
+    growth?: number;
+    edges?: number;
+    seed?: string;
+}
+export declare type PatternProps = Pick<React.SVGAttributes<SVGPatternElement>, 'width' | 'height' | 'path'>;
+interface BaseProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'viewBox' | 'xmlns' | 'xmlnsXlink'> {
+    variant: unknown;
+    isOutline?: boolean;
+    shapeProps?: ShapeProps;
+    gradientId: string;
+}
+interface SvgSolidProps extends BaseProps {
+    variant: 'solid';
+}
+interface SvgGradientProps extends BaseProps {
+    variant: 'gradient';
+    colors: [string, string];
+}
+interface SvgPatternProps extends BaseProps {
+    variant: 'pattern';
+    pattern: PatternProps;
+}
+interface SvgImageProps extends BaseProps {
+    variant: 'image';
+    image: string;
+}
+export declare type SvgBlobProps = SvgSolidProps | SvgGradientProps | SvgPatternProps | SvgImageProps;
+export {};
