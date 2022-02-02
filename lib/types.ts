@@ -18,6 +18,7 @@ interface BaseProps
   variant: unknown;
   isOutline?: boolean;
   shapeProps?: ShapeProps;
+  gradientId: string;
 }
 
 interface SvgSolidProps extends BaseProps {

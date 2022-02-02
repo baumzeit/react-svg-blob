@@ -1,7 +1,7 @@
-import React, {useMemo, forwardRef} from 'react';
+import React, { useMemo, forwardRef } from 'react';
 import blobshape from 'blobshape';
 
-import {SvgBlobProps} from './types';
+import { SvgBlobProps } from './types';
 
 export const SvgBlob = forwardRef<SVGSVGElement, SvgBlobProps>(function SvgBlob(
   props,
@@ -20,7 +20,7 @@ export const SvgBlob = forwardRef<SVGSVGElement, SvgBlobProps>(function SvgBlob(
   const edges = shapeProps?.edges ?? 6;
   const seed = shapeProps?.seed ?? 6;
 
-  const {path: svgPath} = useMemo(
+  const { path: svgPath } = useMemo(
     () =>
       blobshape({
         size,
@@ -36,7 +36,7 @@ export const SvgBlob = forwardRef<SVGSVGElement, SvgBlobProps>(function SvgBlob(
   };
 
   if (variant === 'gradient') {
-    pathProps.fill = 'url(#gradient)';
+    pathProps.fill = `url(#${props.gradientId})`;
   }
 
   if (isOutline) {
@@ -46,26 +46,33 @@ export const SvgBlob = forwardRef<SVGSVGElement, SvgBlobProps>(function SvgBlob(
   }
 
   if (variant === 'gradient' && isOutline) {
-    pathProps.stroke = 'url(#gradient)';
+    pathProps.stroke = `url(#${props.gradientId})`;
   }
 
-  const {colors, pattern, image, ...svgProps} = restProps as any;
+  const { colors, pattern, image, ...svgProps } = restProps as any;
 
   return (
     <svg
       ref={ref}
       {...svgProps}
       viewBox={`0 0 ${size} ${size}`}
-      xmlns='http://www.w3.org/2000/svg'
-      xmlnsXlink='http://www.w3.org/1999/xlink'>
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+    >
       {props.variant === 'solid' && <path d={svgPath} {...pathProps} />}
 
       {props.variant === 'gradient' && (
         <>
           <defs>
-            <linearGradient id='gradient' x1='0%' y1='0%' x2='0%' y2='100%'>
-              <stop offset='0%' style={{stopColor: props.colors[0]}} />
-              <stop offset='100%' style={{stopColor: props.colors[1]}} />
+            <linearGradient
+              id={props.gradientId}
+              x1="0%"
+              y1="0%"
+              x2="0%"
+              y2="100%"
+            >
+              <stop offset="0%" style={{ stopColor: props.colors[0] }} />
+              <stop offset="100%" style={{ stopColor: props.colors[1] }} />
             </linearGradient>
           </defs>
           <path d={svgPath} {...pathProps} />
@@ -76,35 +83,36 @@ export const SvgBlob = forwardRef<SVGSVGElement, SvgBlobProps>(function SvgBlob(
         <>
           <defs>
             <pattern
-              id='pattern'
-              x='0'
-              y='0'
+              id="pattern"
+              x="0"
+              y="0"
               width={props.pattern.width}
               height={props.pattern.height}
-              patternUnits='userSpaceOnUse'
-              fill={color}>
+              patternUnits="userSpaceOnUse"
+              fill={color}
+            >
               <path d={props.pattern.path} />
             </pattern>
           </defs>
-          <path d={svgPath} {...pathProps} fill='url(#pattern)' />
+          <path d={svgPath} {...pathProps} fill="url(#pattern)" />
         </>
       )}
 
       {props.variant === 'image' && (
         <>
           <defs>
-            <clipPath id='shape'>
+            <clipPath id="shape">
               <path d={svgPath} {...pathProps} />
             </clipPath>
           </defs>
           <image
-            x='0'
-            y='0'
-            width='100%'
-            height='100%'
-            clipPath='url(#shape)'
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            clipPath="url(#shape)"
             xlinkHref={props.image}
-            preserveAspectRatio='none'
+            preserveAspectRatio="none"
           />
         </>
       )}
